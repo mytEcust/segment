@@ -1,0 +1,12 @@
+{
+  "name": "segmentmyt",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "prod": "node index.js"
+  },
+  "dependencies": {
+    "nodejieba": "^2.2.5",
+    "segment": "^0.1.3"
+  }
+}
