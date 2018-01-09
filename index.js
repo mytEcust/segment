@@ -1,43 +1,21 @@
-const fs = require('fs');
-const path = require('path');
+'use strict';
 
-// module.exports = function() {
-const msrTraining = fs.readFileSync(
-  path.join(__dirname, './training/22.utf8'),
-  'utf-8'
-);
-const chatArr = msrTraining.split('');
-const markedArr = [];
+const mark = require('./components/mark.js');
+const singleP = require('./components/singleP.js');
+const conditionalP = require('./components/conditionalP.js');
+const segment = require('./components/segment.js');
 
-// 词头B，词中M，词尾E和单子成词S
-let i = 1;
-while (i < chatArr.length) {
-  if (chatArr[i] === ' ') {
-    i++;
-    continue;
-  }
-  markedArr.push(chatArr[i]);
-  //最后一个词
-  if (i === chatArr.length - 1) {
-    if (chatArr[i - 1] === ' ') {
-      markedArr.push('S');
-    } else {
-      markedArr.push('E');
-    }
-  } else {
-    if (chatArr[i - 1] === ' ' && chatArr[i + 1] === ' ') {
-      markedArr.push('S');
-    } else if (chatArr[i - 1] === ' ' && chatArr[i + 1] !== ' ') {
-      markedArr.push('B');
-    } else if (chatArr[i - 1] !== ' ' && chatArr[i + 1] !== ' ') {
-      markedArr.push('M');
-    } else {
-      markedArr.push('E');
-    }
-  }
-  i++;
+function training() {
+  mark('pku_training');
+  mark('msr_training');
+  singleP();
+  conditionalP();
+  console.info('训练完成');
 }
 
-console.info(markedArr);
-// };
-//
+console.info(segment('那个老汉奸杀了我们两个兄弟'));
+
+module.exports = {
+  training,
+  segment
+};
