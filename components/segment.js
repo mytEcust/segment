@@ -9,6 +9,7 @@ const getTag = util.getTag;
 const getInt = util.getInt;
 
 const defaultP = 0;
+const defaultConP = 0.000001;
 
 module.exports = function(str) {
   let singleP = fs.readFileSync(
@@ -24,7 +25,7 @@ module.exports = function(str) {
   conP = JSON.parse(conP);
 
   class GNode {
-    constructor(MaxPos, CurTag, PreTag) {
+    constructor(MaxPos = defaultP, CurTag, PreTag) {
       //最高概率
       this.MaxPos = MaxPos;
       //当前标签
@@ -51,23 +52,12 @@ module.exports = function(str) {
     graph[0][j].CurTag = getTag(j);
     if (j === 0 || j === 3) {
       try {
-        graph[0][j].MaxPos = singleP[strArr[0]][graph[0][j].CurTag];
+        graph[0][j].MaxPos = singleP[strArr[0]][graph[0][j].CurTag] || defaultP;
       } catch (e) {
         graph[0][j].MaxPos = defaultP;
       }
     } else {
       graph[0][j].MaxPos = defaultP;
-    }
-  }
-
-  for (let i = 0; i < strArr.length; i++) {
-    for (let j = 0; j < 4; j++) {
-      graph[i][j].CurTag = getTag(j);
-      try {
-        graph[i][j].MaxPos = singleP[strArr[i]][graph[i][j].CurTag];
-      } catch (e) {
-        graph[i][j].MaxPos = defaultP;
-      }
     }
   }
 
@@ -86,7 +76,6 @@ module.exports = function(str) {
         ) {
           continue;
         }
-
         let pri_key_sb = {
           chat: strArr[i - 1],
           tag: graph[i - 1][n].CurTag
@@ -97,12 +86,16 @@ module.exports = function(str) {
           _pos =
             conP[pri_key_sb.chat][pri_key_sb.tag][sec_key_sb.chat][
               sec_key_sb.tag
-            ];
+            ] || defaultConP;
         } catch (e) {
-          _pos = defaultP;
+          _pos = defaultConP;
         }
+
         _pos *= graph[i - 1][n].MaxPos;
+        
+
         if (_pos >= graph[i][j].MaxPos) {
+
           graph[i][j].MaxPos = _pos;
           graph[i][j].PreTag = graph[i - 1][n].CurTag;
         }
@@ -133,21 +126,10 @@ module.exports = function(str) {
     i >= 0 && j > 0;
     i--, j -= 2
   ) {
-    chararr[j - 1] = strArr[i];
-    if (m) {
       chararr[j] = graph[i][m].CurTag;
+      chararr[j - 1] = strArr[i];
       m = getInt(graph[i][m].PreTag);
-    } else {
-      let _tag;
-      let pos = -1;
-      for (let n = 0; n < 4; n++) {
-        if (graph[i][n].MaxPos > pos) {
-          pos = graph[i][n].MaxPos;
-          _tag = graph[i][n].CurTag;
-        }
-      }
-      chararr[j] = _tag;
-    }
+
   }
 
   let phrase='';
