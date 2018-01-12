@@ -14,7 +14,7 @@ module.exports = function(fileName) {
   });
 
   let singleP = fs.readFileSync(
-    path.join(__dirname, `../single-probability/singleP.json`),
+    path.join(__dirname, `../probability/singleP.json`),
     'utf-8'
   );
 
