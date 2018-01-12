@@ -31,12 +31,13 @@ function getInt(tag) {
       return 2;
     case 'S':
       return 3;
+    default:
       return 3;
   }
 }
 
 module.exports = {
-    checkLogicalCombination,
-    getTag,
-    getInt
-}
+  checkLogicalCombination,
+  getTag,
+  getInt
+};
