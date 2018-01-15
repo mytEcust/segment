@@ -14,6 +14,7 @@
     "assert": "^1.4.1",
     "eslint": "^4.15.0",
     "eslint-config-egg": "^5.1.1",
+    "husky": "^0.14.3",
     "mocha": "^4.1.0"
   }
 }
