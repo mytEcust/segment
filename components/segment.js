@@ -11,13 +11,13 @@ const getInt = util.getInt;
 const defaultP = 0;
 const defaultConP = 0.000001;
 
-module.exports = function(str) {
+module.exports = str => {
   let singleP = fs.readFileSync(
-    path.join(__dirname, `../probability/singleP.json`),
+    path.join(__dirname, '../probability/singleP.json'),
     'utf-8'
   );
   let conP = fs.readFileSync(
-    path.join(__dirname, `../probability/conditionalP.json`),
+    path.join(__dirname, '../probability/conditionalP.json'),
     'utf-8'
   );
 
@@ -26,19 +26,18 @@ module.exports = function(str) {
 
   class GNode {
     constructor(MaxPos = defaultP, CurTag, PreTag) {
-      //最高概率
+      // 最高概率
       this.MaxPos = MaxPos;
-      //当前标签
+      // 当前标签
       this.CurTag = CurTag;
-      //前一个字的标签
+      // 前一个字的标签
       this.PreTag = PreTag;
     }
   }
 
-  //遍历独立概率
+  // 遍历独立概率
   const strArr = str.split('');
-  const strNode = [];
-  let graph = [];
+  const graph = [];
 
   for (let i = 0; i < strArr.length; i++) {
     graph.push([]);
@@ -66,9 +65,9 @@ module.exports = function(str) {
     for (let j = 0; j < 4; j++) {
       graph[i][j].CurTag = getTag(j);
 
-      let sec_key_sb = {
+      const sec_key_sb = {
         chat: strArr[i],
-        tag: graph[i][j].CurTag
+        tag: graph[i][j].CurTag,
       };
       for (let n = 0; n < 4; n++) {
         if (
@@ -76,26 +75,22 @@ module.exports = function(str) {
         ) {
           continue;
         }
-        let pri_key_sb = {
+        const pri_key_sb = {
           chat: strArr[i - 1],
-          tag: graph[i - 1][n].CurTag
+          tag: graph[i - 1][n].CurTag,
         };
 
         let _pos;
         try {
           _pos =
-            conP[pri_key_sb.chat][pri_key_sb.tag][sec_key_sb.chat][
-              sec_key_sb.tag
-            ] || defaultConP;
+            conP[pri_key_sb.chat][pri_key_sb.tag][sec_key_sb.chat][sec_key_sb.tag] || defaultConP;
         } catch (e) {
           _pos = defaultConP;
         }
 
         _pos *= graph[i - 1][n].MaxPos;
-        
 
         if (_pos >= graph[i][j].MaxPos) {
-
           graph[i][j].MaxPos = _pos;
           graph[i][j].PreTag = graph[i - 1][n].CurTag;
         }
@@ -119,28 +114,27 @@ module.exports = function(str) {
     }
   }
 
-  let chararr = [];
+  const chararr = [];
   chararr.length = strArr.length * 2;
   for (
     let i = strArr.length - 1, j = chararr.length - 1;
     i >= 0 && j > 0;
     i--, j -= 2
   ) {
-      chararr[j] = graph[i][m].CurTag;
-      chararr[j - 1] = strArr[i];
-      m = getInt(graph[i][m].PreTag);
-
+    chararr[j] = graph[i][m].CurTag;
+    chararr[j - 1] = strArr[i];
+    m = getInt(graph[i][m].PreTag);
   }
 
-  let phrase='';
+  let phrase = '';
 
   for (let i = 0; i < chararr.length; i += 2) {
     if (chararr[i + 1] === 'E' || chararr[i + 1] === 'S') {
-      phrase+=chararr[i];
+      phrase += chararr[i];
       resultlist.push(phrase);
-      phrase='';
-    }else {
-      phrase+=chararr[i];
+      phrase = '';
+    } else {
+      phrase += chararr[i];
     }
   }
 

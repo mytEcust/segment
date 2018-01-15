@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function(fileName) {
+module.exports = fileName => {
   const trainingStr = fs.readFileSync(
     path.join(__dirname, `../training/${fileName}.utf8`),
     'utf-8'
@@ -19,7 +19,7 @@ module.exports = function(fileName) {
       continue;
     }
     markedArr.push(chatArr[i]);
-    //最后一个词
+    // 最后一个词
     if (i === chatArr.length - 1) {
       if (chatArr[i - 1] === ' ') {
         markedArr.push('S');

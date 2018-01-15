@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function() {
+module.exports = () => {
   let chatArr = [];
   const markPath = path.normalize(path.join(__dirname, '/..')) + '/marked';
 
@@ -23,9 +23,9 @@ module.exports = function() {
     const chat = chatArr[i];
     const tag = chatArr[i + 1];
 
-    //字符已存在
+    // 字符已存在
     if (singlePObj[chat]) {
-      //tag已存在
+      // tag已存在
       if (singlePObj[chat][tag]) {
         singlePObj[chat][tag]++;
       } else {
@@ -39,8 +39,8 @@ module.exports = function() {
     i = i + 2;
   }
 
-  for (let chat in singlePObj) {
-    for (let tag in singlePObj[chat]) {
+  for (const chat in singlePObj) {
+    for (const tag in singlePObj[chat]) {
       singlePObj[chat][tag] = singlePObj[chat][tag] / total;
     }
   }

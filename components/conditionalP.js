@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function(fileName) {
+module.exports = () => {
   let chatArr = [];
   const markPath = path.normalize(path.join(__dirname, '/..')) + '/marked';
 
@@ -14,7 +14,7 @@ module.exports = function(fileName) {
   });
 
   let singleP = fs.readFileSync(
-    path.join(__dirname, `../probability/singleP.json`),
+    path.join(__dirname, '../probability/singleP.json'),
     'utf-8'
   );
 
@@ -25,7 +25,7 @@ module.exports = function(fileName) {
   let i = 0;
   let total = 0;
 
-  //减3是为了最后一个字符后面还有字符 产B油E
+  // 减3是为了最后一个字符后面还有字符 产B油E
   while (i < chatArr.length - 3) {
     total++;
     const chat = chatArr[i];
@@ -33,13 +33,13 @@ module.exports = function(fileName) {
     const nextChat = chatArr[i + 2];
     const nextTag = chatArr[i + 3];
 
-    //首字符已存在
+    // 首字符已存在
     if (cpObj[chat]) {
-      //首tag已存在
+      // 首tag已存在
       if (cpObj[chat][tag]) {
-        //后chat已存在
+        // 后chat已存在
         if (cpObj[chat][tag][nextChat]) {
-          //后tag已存在
+          // 后tag已存在
           if (cpObj[chat][tag][nextChat][nextTag]) {
             cpObj[chat][tag][nextChat][nextTag]++;
           } else {
@@ -64,10 +64,10 @@ module.exports = function(fileName) {
     i = i + 2;
   }
 
-  for (let chat in cpObj) {
-    for (let tag in cpObj[chat]) {
-      for (let nextChat in cpObj[chat][tag]) {
-        for (let nextTag in cpObj[chat][tag][nextChat]) {
+  for (const chat in cpObj) {
+    for (const tag in cpObj[chat]) {
+      for (const nextChat in cpObj[chat][tag]) {
+        for (const nextTag in cpObj[chat][tag][nextChat]) {
           cpObj[chat][tag][nextChat][nextTag] =
             cpObj[chat][tag][nextChat][nextTag] / total;
           cpObj[chat][tag][nextChat][nextTag] =
@@ -79,7 +79,7 @@ module.exports = function(fileName) {
 
   const cpStr = JSON.stringify(cpObj);
   fs.writeFileSync(
-    path.join(__dirname, `../probability/conditionalP.json`),
+    path.join(__dirname, '../probability/conditionalP.json'),
     cpStr
   );
 };
