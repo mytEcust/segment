@@ -113,7 +113,7 @@ module.exports = str => {
       m = j;
     }
   }
-
+  
   const chararr = [];
   chararr.length = strArr.length * 2;
   for (

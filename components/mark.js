@@ -12,8 +12,11 @@ module.exports = fileName => {
   const markedArr = [];
 
   // 词头B，词中M，词尾E和单子成词S
-  let i = 1;
+  let i = 0;
   while (i < chatArr.length) {
+    if (chatArr[i] === '\n') {
+      chatArr[i] = ' ';
+    }
     if (chatArr[i] === ' ') {
       i++;
       continue;
@@ -22,6 +25,13 @@ module.exports = fileName => {
     // 最后一个词
     if (i === chatArr.length - 1) {
       if (chatArr[i - 1] === ' ') {
+        markedArr.push('S');
+      } else {
+        markedArr.push('E');
+      }
+    } else if (i === 0) {
+      // 第一个字
+      if (chatArr[1] === ' ') {
         markedArr.push('S');
       } else {
         markedArr.push('E');

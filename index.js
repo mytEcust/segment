@@ -13,7 +13,7 @@ function training() {
   console.info('训练完成');
 }
 
-// training();
+training();
 console.info(segment('挑水回来的和尚和尚未挑水回来的和尚'));
 
 module.exports = {
